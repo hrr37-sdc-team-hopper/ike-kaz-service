@@ -1,0 +1,154 @@
+
+#================== cassandra ==============
+sudo add-apt-repository ppa:webupd8team/java
+sudo apt-get update
+
+sudo apt install openjdk-8-jre -y
+> java -version
+
+echo "JAVA_HOME=$(readlink -f /usr/bin/java | sed "s:bin/java::")" | sudo tee -a /etc/profile
+source /etc/profile
+echo $JAVA_HOME
+
+wget -q -O - https://www.apache.org/dist/cassandra/KEYS | sudo apt-key add -
+sudo sh -c 'echo "deb http://www.apache.org/dist/cassandra/debian 311x main" > /etc/apt/sources.list.d/cassandra.list'
+
+sudo apt update
+sudo apt install cassandra
+
+sudo update-alternatives --config java
+--> /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
+
+sudo service cassandra start
+systemctl restart cassandra
+
+nodetool status
+
+cqlsh localhost
+
+[DONE] : Connected to Test Cluster at localhost:9042.
+
+>> https://www.vultr.com/docs/how-to-install-apache-cassandra-3-11-x-on-ubuntu-16-04-lts
+
+#================== postgres ==============
+sudo apt install postgresql postgresql-contrib
+sudo service postgresql restart
+psql -d mydb -U postgres
+sudo -u postgres psql -d goodreads  -f  schema_postgres.sql
+
+[login] sudo -i -u postgres
+[login] psql
+
+[login] sudo -u postgres psql
+
+>> https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04
+
+
+
+wget https://packages.erlang-solutions.com/erlang-solutions_1.0_all.deb
+sudo dpkg -i erlang-solutions_1.0_all.deb
+sudo apt-get update
+sudo apt-get install erlang
+sudo apt-get update
+sudo apt-get install esl-erlang
+
+
+
+#================== erlang ==============
+wget http://s3.amazonaws.com/downloads.riak.com/erlang/otp_src_R16B02-basho10.tar.gz
+tar zxvf otp_src_R16B02-basho10.tar.gz
+cd OTP_R16B02_basho10
+./otp_build autoconf
+./configure && make && sudo make install
+
+
+git clone https://github.com/basho/riak
+cd riak
+
+
+
+
+#================== riak ==============
+
+
+ 3330  curl -s https://packagecloud.io/install/repositories/basho/riak/script.deb.sh | sudo bash
+ 3337  echo "deb https://packagecloud.io/basho/riak/ubuntu/ xenial main" | sudo tee -a /etc/apt/sources.list.d/riak.list
+ 3338  echo "deb-src https://packagecloud.io/basho/riak/ubuntu/ xenial main" | sudo tee -a /etc/apt/sources.list.d/riak.list
+
+sudo apt update
+sudo apt-get install riak
+sudo service riak status
+sudo service riak start
+sudo service riak restart
+sudo service riak status
+sudo riak-admin test
+curl -v http://127.0.0.1:8098/types/default/props
+
+
+curl http://localhost:8091/ping
+OK
+curl -I http://localhost:8098/riak/no_bucket/no_key
+
+
+
+curl -v -X PUT http://localhost:8098/riak/favs/db \
+-H "Content-Type: text/html" \
+-d "<html><body><h1>My new favorite DB is RIAK</h1></body></html>"
+
+curl -v -X PUT http://localhost:8098/riak/animals/ace \
+-H "Content-Type: application/json" \
+-d '{"nickname" : "The Wonder Dog", "breed" : "German Shepherd"}'
+
+curl -X GET http://localhost:8098/riak?buckets=true
+
+
+
+curl -v -X PUT http://localhost:8098/riak/animals/polly?returnbody=true \
+-H "Content-Type: application/json" \
+-d '{"nickname" : "Sweet Polly Purebred", "breed" : "Purebred"}'
+
+
+
+curl -i -X POST http://localhost:8098/riak/animals \
+-H "Content-Type: application/json" \
+-d '{"nickname" : "Sergeant Stubby", "breed" : "Terrier"}'
+
+GET
+curl http://localhost:8098//riak/animals/88ceqZpZDmqjt2Jhsn8asPQURmx
+
+DELETE
+curl -i -X DELETE http://localhost:8098//riak/animals/88ceqZpZDmqjt2Jhsn8asPQURmx
+
+
+
+start a node
+==========
+
+
+
+
+http://SERVER:PORT/riak/BUCKET/KEY
+
+
+https://hostpresto.com/community/tutorials/how-to-install-riak-on-ubuntu-14-04/
+https://www.erlang.org/downloads/R16B02
+
+
+
+
+
+
+file gen * 5
+
+streams
+100 records -> 72ms
+100000 recs -> 34568 ms
+100000 * 20 recs -> 118136.676ms
+250000 * 20 recs -> 774019.438ms
+
+
+
+
+no streams
+100 records -> 68ms
+100000 recs -> 42239 ms
