@@ -6,40 +6,39 @@ const csvWriter = require('csv-write-stream');
 faker.seed(123);
 
 // generate data
-const generateBookInfo = function (){
+const generateBookInfo = function BookInfo(){
   const bookInfo = {
-    title: faker.random.words(3),
-    author: faker.name.findName(),
-    description: faker.lorem.sentences(6),
-    num_reviews: faker.random.number({'min': 1, 'max': 50000}),
-    num_ratings: faker.random.number({'min': 1, 'max': 2000000}),
-    ratings_star: faker.random.number(0, 5, 2),
-    image: faker.image.image()
+      title: faker.random.words(3),
+      author: faker.name.findName(),
+      description: faker.lorem.sentences(6),
+      num_reviews: faker.random.number({ 'min': 1, 'max': 50000 }),
+      num_ratings: faker.random.number({ 'min': 1, 'max': 2000000 }),
+      ratings_star: faker.random.number(0, 5, 2),
+      image: faker.image.image()
   };
   return bookInfo;
 };
 
-const generateUsers = function (){
+const generateUsers = function Users(){
   const users = {
     email: faker.internet.email(),
-    bookInfo_id: faker.random.number({'min': 1, 'max': 1000000})
+    bookInfo_id: faker.random.number({ 'min': 1, 'max': 1000000 })
   };
   return users;
 };
 
 
-const generateReadStatus = function (){
+const generateReadStatus = function ReadStatus(){
   const readStatus = {
-    bookInfo_id: faker.random.number({'min' :1, 'max' : 1000000}),
+    bookInfo_id: faker.random.number({ 'min' :1, 'max': 1000000 }),
     user_id: faker.random.uuid(),
-    status: faker.random.number({'min' :0, 'max' : 1})
+    status: faker.random.number({'min': 0, 'max': 1 })
   };
   return readStatus;
 };
 
 
-const dataWriteToDisk = function (fileName, batch, callback, drainfunc){
-
+const dataWriteToDisk = function WriteToDisk(fileName, batch, callback, drainfunc){
   // get header for each file
   let writer = csvWriter({
     headers: Object.keys(callback())
@@ -47,7 +46,8 @@ const dataWriteToDisk = function (fileName, batch, callback, drainfunc){
 
   writer.pipe(fs.createWriteStream(`./data/${fileName}_${batch}.csv`));
 
-  var noOfProfiles =  10000;  // generate 250K records per pass
+   // generate 10M records
+  var noOfProfiles =  10000;
   function drainWrite() {
     var ok = true;
     do {
