@@ -1,6 +1,8 @@
 var faker = require('faker');
 var csv = require('csv-parser');
 var fs = require('fs');
+var csvWriter = require('csv-write-stream');
+
 
 //set seed
 faker.seed(123);
@@ -45,43 +47,55 @@ var data_readStatus = function(){
 };
 
 
-var dataWriteToDisk = function(fileName, batch, callback){
+var dataWriteToDisk = function(fileName, batch, callback, drainfunc){
+
+  // get header for each file
+  var writer = csvWriter({
+    headers : Object.keys(callback())
+  });
 
   var dataToStore = [];
-  var noOfProfiles =  250000;  // generate 250K records per ass
+  writer.pipe(fs.createWriteStream(`./data/${fileName}_${batch}.csv`));
 
-    if (fileName === 'users') {
-      for ( var i = 0; i < noOfProfiles * 4 ; i++){
-        dataToStore.push(callback());
+  var noOfProfiles =  10000;  // generate 250K records per pass
+  function drainWrite() {
+    var ok = true;
+    do {
+      data = callback()
+      noOfProfiles -= 1;
+      if ( noOfProfiles === 0) {
+        // last time!
+          writer.write(data, drainfunc);
+
+      } else {
+        // see if we should continue, or wait
+        // don't pass the callback, because we're not done yet.
+          ok = writer.write(data);
       }
-     }  else {
-      for (var i = 1; i <= noOfProfiles ; i++) {
-        dataToStore.push(callback());
-      }
+    } while (noOfProfiles > 0 && ok);
+    if (noOfProfiles > 0) {
+      // had to stop early!
+      // write some more once it drains
+      writer.once('drain', drainWrite);
     }
-
-    var  writeStream = fs.createWriteStream(__dirname + `/data/${fileName}_${batch}.json`);
-
-    // write some data with a base64 encoding
-    writeStream.write(JSON.stringify(dataToStore));
-
-    // the finish event is emitted when all data has been flushed from stream
-    writeStream.on('finish', () => {
-        console.log(`SUCCESS : File /data/${fileName}_${batch}.json created`);
-    });
-
-    writeStream.end();
-
+  };
+  drainWrite();
+  console.log(`SUCCESS : File ./data/${fileName}_${batch}.csv created`);
 };
 
 // execution time
 console.time('timing seed');
 
-var filesToCreate = 40;
-for (var batch = 0; batch < filesToCreate ; batch++) {
-  dataWriteToDisk('bookInfo', batch, data_bookInfo)
-  dataWriteToDisk('readStatus', batch, data_readStatus);
-  dataWriteToDisk('users', batch, data_users);
+var filesToCreate = 15;
+
+for (var batch = 0; batch < 2 ; batch++) {
+  dataWriteToDisk('readStatus', 0, data_readStatus);
+  dataWriteToDisk('users', 0, data_users);
 }
 
+for (var batch = 0; batch < filesToCreate ; batch++) {
+  dataWriteToDisk('bookInfo', batch, data_bookInfo)
+}
 console.timeEnd('timing seed');
+
+
