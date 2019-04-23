@@ -2,7 +2,7 @@
 
 -- CREATE DATABASE goodreads;
 
--- CONNECT  goodreads;
+-- \c  goodreads;
 
 CREATE TABLE IF NOT EXISTS bookInfo (
 

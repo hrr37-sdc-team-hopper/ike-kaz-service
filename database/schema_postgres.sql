@@ -1,8 +1,8 @@
--- DROP DATABASE IF EXISTS goodreads;
+DROP DATABASE IF EXISTS goodreads;
 
--- CREATE DATABASE goodreads;
+CREATE DATABASE goodreads;
 
--- CONNECT  goodreads;
+\c  goodreads;
 
 CREATE TABLE IF NOT EXISTS bookInfo (
 

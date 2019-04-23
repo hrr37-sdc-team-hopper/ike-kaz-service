@@ -39,7 +39,10 @@ sudo -u postgres psql -d goodreads  -f  schema_postgres.sql
 [login] sudo -i -u postgres
 [login] psql
 
-[login] sudo -u postgres psql
+[login] sudo -u postgres psql -d goodreads
+
+[works] psql -d goodreads -c "SELECT * FROM users LIMIT 10"
+
 
 >> https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04
 
@@ -147,8 +150,20 @@ streams
 250000 * 20 recs -> 774019.438ms
 
 
-
-
 no streams
 100 records -> 68ms
 100000 recs -> 42239 ms
+
+
+writig to csv with streams
+
+50k * 5 files ->  14249.974ms
+100k * 5 files -> 27864.050ms
+
+implemented draining
+
+50k  x 20 recs -> 401.040ms
+250k * 5 recs -> 161.883ms
+1M * 5 recs -> 150.610ms
+5M * 3 recs -> 143.935ms
+10M * 2 recs -> 181.319ms
