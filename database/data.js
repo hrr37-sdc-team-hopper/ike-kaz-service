@@ -8,7 +8,7 @@ faker.seed(123);
 // generate data
 const generateBookInfo = function BookInfo() {
   const bookInfo = {
-    title: faker.random.words(3),
+    title: faker.random.words(2),
     author: faker.name.findName(),
     description: faker.lorem.sentences(6),
     num_reviews: faker.random.number({ min: 1, max: 50000 }),

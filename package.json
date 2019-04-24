@@ -7,6 +7,7 @@
     "lint": "eslint .",
     "seed": "node database/generator.js",
     "create-data": "node database/data.js ",
+    "clean-data": "python data/cleanData.py ",
     "start": "node server/index.js",
     "build": "webpack --config ./client/webpack.config.js -p",
     "start-frontend": "webpack --config ./client/webpack.config.js --dev --watch",
