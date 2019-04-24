@@ -20,11 +20,16 @@ sudo update-alternatives --config java
 --> /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 
 sudo service cassandra start
+sudo service cassandra stop
+udo service cassandra status
+
 systemctl restart cassandra
 
 nodetool status
 
 cqlsh localhost
+
+[status] : sudo nodetool status
 
 [DONE] : Connected to Test Cluster at localhost:9042.
 
@@ -36,6 +41,7 @@ sudo service postgresql restart
 psql -d mydb -U postgres
 sudo -u postgres psql -d goodreads  -f  schema_postgres.sql
 
+[good] sudo -u postgres psql -d goodreads
 [login] sudo -i -u postgres
 [login] psql
 
@@ -138,6 +144,8 @@ https://www.erlang.org/downloads/R16B02
 
 
 
+========= mongo
+sudo service mongod stop
 
 
 
@@ -167,3 +175,28 @@ implemented draining
 1M * 5 recs -> 150.610ms
 5M * 3 recs -> 143.935ms
 10M * 2 recs -> 181.319ms
+
+
+
+
+postgrs insert
+users =  5.7M - 20 sec
+
+
+############################# DB queries   #############################
+
+
+-- postgres
+
+SELECT * FROM bookInfo where id = 10000000;
+
+  id    |              title              |    author     |                                                                                                                                           description                                                                                                                                           | num_reviews | num_ratings | ratings_star |                image
+---------+---------------------------------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+-------------+--------------+--------------------------------------
+ 10000000 | system engine strategic Analyst | Sadie Keeling | Inventore laboriosam qui perspiciatis. Ea quis omnis mollitia quisquam aliquid est. Reprehenderit eius quis neque soluta. Magni eum quos est dolorum aspernatur temporibus saepe. Explicabo id voluptatem totam omnis velit atque saepe. Quam reiciendis enim aut incidunt aut iusto quia odit. |       15236 |     1655847 |            0 | http://lorempixel.com/640/480/sports
+(1 row)
+
+
+-- cassandra
+
+
+timing
