@@ -4,7 +4,7 @@ const db = require('../database/index');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require('cors');
-const postgres = require('../database/db');
+const DB = require('../database/db');
 
 const app = express();
 const PORT = 3002;
@@ -21,22 +21,39 @@ app.all('/books/:id', async (req, res) => {
 
 // get a record from bookInfo - Postgres for testing
 // console.time("timing query");
-const time = Date.now();
 
-app.get('/booksTest', function(req, res) {
-  var queryString = `SELECT * FROM bookInfo WHERE id  =  10000000`;
-  postgres.query(queryString, function(err, results) {
+app.get('/booksTest/postgres', function(req, res) {
+  const time = Date.now();
+
+  var queryString = `SELECT * FROM bookInfo WHERE id  =  9999999`;
+  DB.dbPostgres.query(queryString, function(err, results) {
     if (err) {
       console.error('ERROR');
       throw err;
     }
     console.log(`SUCCESS : Retrieved records from  database : bookInfo `);
     console.log(results.rows);
+    console.log(queryString);
+    console.log(`total query time was ${Date.now() - time}ms`);
     res.send(results);
   });
 });
 
-console.log(`total query time was ${Date.now() - time}ms`);
+app.get('/booksTest/cassandra', function(req, res) {
+  const time = Date.now();
+
+  var queryString = 'SELECT * FROM goodreads.bookInfo where id = 9999999';
+  DB.dbCassandra.execute(queryString, [], function(err, results) {
+    if (err) {
+      console.error('ERROR');
+      throw err;
+    }
+    console.log(`total query time was ${Date.now() - time}ms`);
+    console.log(`SUCCESS : Retrieved records from   keyspace : goodreads `);
+    console.log(results.rows);
+    // res.send(results);
+  });
+});
 
 app.get('/books/:id/info', async (req, res) => {
   const id = req.params.id;
