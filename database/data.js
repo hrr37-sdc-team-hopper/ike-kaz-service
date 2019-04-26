@@ -14,7 +14,7 @@ const generateBookInfo = function BookInfo() {
     num_reviews: faker.random.number({ min: 1, max: 50000 }),
     num_ratings: faker.random.number({ min: 1, max: 2000000 }),
     ratings_star: faker.random.number(0, 5, 2),
-    image: faker.image.image(),
+    image: faker.image.image()
   };
   return bookInfo;
 };
@@ -22,7 +22,7 @@ const generateBookInfo = function BookInfo() {
 const generateUsers = function Users() {
   const users = {
     email: faker.internet.email(),
-    bookInfo_id: faker.random.number({ min: 1, max: 1000000 }),
+    bookInfo_id: faker.random.number({ min: 1, max: 1000000 })
   };
   return users;
 };
@@ -31,7 +31,7 @@ const generateReadStatus = function ReadStatus() {
   const readStatus = {
     bookInfo_id: faker.random.number({ min: 1, max: 1000000 }),
     user_id: faker.random.uuid(),
-    status: faker.random.number({ min: 0, max: 1 }),
+    status: faker.random.number({ min: 0, max: 1 })
   };
   return readStatus;
 };
@@ -39,7 +39,7 @@ const generateReadStatus = function ReadStatus() {
 const dataWriteToDisk = function WriteToDisk(fileName, batch, callback, drainfunc) {
   // get header for each file
   const writer = csvWriter({
-    headers: Object.keys(callback()),
+    headers: Object.keys(callback())
   });
 
   writer.pipe(fs.createWriteStream(`./data/${fileName}_${batch}.csv`));
@@ -73,12 +73,10 @@ const dataWriteToDisk = function WriteToDisk(fileName, batch, callback, drainfun
 // execution time
 console.time('timing seed');
 
-const filesToCreate = 15;
+const filesToCreate = 5;
 
-for (let batch = 0; batch < 2; batch++) {
-  dataWriteToDisk('readStatus', 0, generateReadStatus);
-  dataWriteToDisk('users', 0, generateUsers);
-}
+dataWriteToDisk('readStatus', 0, generateReadStatus);
+dataWriteToDisk('users', 0, generateUsers);
 
 for (let batch = 0; batch < filesToCreate; batch++) {
   dataWriteToDisk('bookInfo', batch, generateBookInfo);
