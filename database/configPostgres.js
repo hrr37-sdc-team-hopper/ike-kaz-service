@@ -1,23 +1,9 @@
 const postgres = require('pg');
 const db = require('../database/db');
 
-// var db = new postgres.Client({
-//   host: 'localhost',
-//   user: 'postgres',
-//   database: 'goodreads'
-// });
-
-// db.connect((err, client) => {
-//   if (err) {
-//     throw err;
-//   } else {
-//     console.log(`Connected to database :${db.database}`);
-//   }
-// });
-
 // DELETE tables======================================================
 var queryString = `DROP TABLE IF EXISTS bookInfo`;
-db.query(queryString, (err, results) => {
+db.dbPostgres.query(queryString, (err, results) => {
   if (err) {
     console.error('ERROR');
   } else {
@@ -27,7 +13,7 @@ db.query(queryString, (err, results) => {
 });
 
 var queryString = `DROP TABLE IF EXISTS readStatus`;
-db.query(queryString, (err, results) => {
+db.dbPostgres.query(queryString, (err, results) => {
   if (err) {
     console.error('ERROR');
   } else {
@@ -37,7 +23,7 @@ db.query(queryString, (err, results) => {
 });
 
 var queryString = `DROP TABLE IF EXISTS users`;
-db.query(queryString, (err, results) => {
+db.dbPostgres.query(queryString, (err, results) => {
   if (err) {
     console.error('ERROR');
   } else {
@@ -74,7 +60,7 @@ createTables = {
 };
 
 // CREATE TABLES  ===========================================
-db.query(createTables.bookInfo, (err, results) => {
+db.dbPostgres.query(createTables.bookInfo, (err, results) => {
   if (err) {
     console.error('ERROR');
   } else {
@@ -83,7 +69,7 @@ db.query(createTables.bookInfo, (err, results) => {
   }
 });
 
-db.query(createTables.users, (err, results) => {
+db.dbPostgres.query(createTables.users, (err, results) => {
   if (err) {
     console.error('ERROR');
   } else {
@@ -92,7 +78,7 @@ db.query(createTables.users, (err, results) => {
   }
 });
 
-db.query(createTables.readStatus, (err, results) => {
+db.dbPostgres.query(createTables.readStatus, (err, results) => {
   if (err) {
     console.error('ERROR');
   } else {
