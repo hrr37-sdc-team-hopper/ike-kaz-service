@@ -4,3 +4,7 @@ package-lock.json
 /data/*.csv
 /data/cassandra/*.csv
 /data/postgres/*.csv
+newrelic.js
+newrelic_agent.log
+client/public/bundle-main.js
+

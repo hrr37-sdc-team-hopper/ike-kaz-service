@@ -19,6 +19,7 @@ sudo apt install cassandra
 sudo update-alternatives --config java
 --> /usr/lib/jvm/java-8-openjdk-amd64/jre/bin/java
 
+
 sudo service cassandra start
 sudo service cassandra stop
 udo service cassandra status
@@ -196,3 +197,21 @@ SELECT * FROM bookInfo where id = 10000000;
 ---------+---------------------------------+---------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+-------------+-------------+--------------+--------------------------------------
  10000000 | system engine strategic Analyst | Sadie Keeling | Inventore laboriosam qui perspiciatis. Ea quis omnis mollitia quisquam aliquid est. Reprehenderit eius quis neque soluta. Magni eum quos est dolorum aspernatur temporibus saepe. Explicabo id voluptatem totam omnis velit atque saepe. Quam reiciendis enim aut incidunt aut iusto quia odit. |       15236 |     1655847 |            0 | http://lorempixel.com/640/480/sports
 (1 row)
+
+
+###########
+sudo service mongod stop
+sudo service cassandra stop
+sudo service postgresql restart
+sudo service mysql restart
+sudo service postgresql status
+sudo service mysql status
+
+
+######################### artileery test
+artillery quick --duration 60 --rate 80 -n 40 http://localhost:3002/postgres/5
+
+artillery quick --duration 60 --rate 80 -n 40 http://localhost:3002/books/15/info
+
+
+artillery quick --duration 60 --rate 80 -n 40 http://localhost:8000/books/15
