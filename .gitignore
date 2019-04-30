@@ -6,3 +6,5 @@ package-lock.json
 /data/postgres/*.csv
 newrelic.js
 newrelic_agent.log
+client/public/bundle-main.js
+
