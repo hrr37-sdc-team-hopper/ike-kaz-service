@@ -215,3 +215,9 @@ artillery quick --duration 60 --rate 80 -n 40 http://localhost:3002/books/15/inf
 
 
 artillery quick --duration 60 --rate 80 -n 40 http://localhost:8000/books/15
+
+
+CREATE INDEX idx_id ON bookInfo(id);
+
+
+CREATE INDEX idx_bookInfo_readStatus ON readStatus(bookinfo_id);
