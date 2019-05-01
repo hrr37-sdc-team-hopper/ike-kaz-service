@@ -45,25 +45,25 @@ app.all('/books/:id', async (req, res) => {
 // });
 
 // GET/:id
-app.get('/postgres/:id/info', function(req, res) {
-  const id = req.params.id;
-  console.log(req.params.id, 'id');
+// app.get('/postgres/:id/info', function(req, res) {
+//   const id = req.params.id;
+//   console.log(req.params.id, 'id');
 
-  const time = Date.now();
+//   const time = Date.now();
 
-  var queryString = `SELECT * FROM bookInfo WHERE id  =  $1`;
-  DB.dbPostgres.query(queryString, [id], function(err, results) {
-    if (err) {
-      console.error('ERROR');
-      throw err;
-    }
-    console.log(`SUCCESS : Retrieved records from  database : bookInfo `);
-    console.log(results.rows);
-    console.log(queryString);
-    console.log(`total query time was ${Date.now() - time}ms`);
-    res.send(results);
-  });
-});
+//   var queryString = `SELECT * FROM bookInfo WHERE id  =  $1`;
+//   DB.dbPostgres.query(queryString, [id], function(err, results) {
+//     if (err) {
+//       console.error('ERROR');
+//       throw err;
+//     }
+//     console.log(`SUCCESS : Retrieved records from  database : bookInfo `);
+//     console.log(results.rows);
+//     console.log(queryString);
+//     console.log(`total query time was ${Date.now() - time}ms`);
+//     res.send(results);
+//   });
+// });
 
 // // POST
 // app.post('/postgres/info', function(req, res) {
@@ -186,7 +186,7 @@ app.get('/books/:id/info', function(req, res) {
 
   const time = Date.now();
 
-  var queryString = `SELECT id, title, author, description FROM bookInfo WHERE id  =  $1`;
+  var queryString = `SELECT * FROM bookInfo WHERE id  =  $1`;
   DB.dbPostgres.query(queryString, [id], function(err, results) {
     if (err) {
       console.error('ERROR');
@@ -196,7 +196,7 @@ app.get('/books/:id/info', function(req, res) {
     console.log(results.rows);
     console.log(queryString);
     console.log(`total query time was ${Date.now() - time}ms`);
-    res.send(results.rows);
+    res.send(results.rows[0]);
   });
 });
 // ==============
@@ -221,7 +221,7 @@ app.get('/books/:id/info/users', function(req, res) {
 
   const time = Date.now();
 
-  var queryString = `SELECT id, email, bookInfo_id FROM users WHERE id  =  $1`;
+  var queryString = `SELECT * FROM users WHERE bookInfo_id  =  $1`;
   DB.dbPostgres.query(queryString, [id], function(err, results) {
     if (err) {
       console.error('ERROR');
@@ -255,7 +255,7 @@ app.get('/books/:id/info/image', function(req, res) {
 
   const time = Date.now();
 
-  var queryString = `SELECT id, id as bookInfo_id, image FROM bookInfo WHERE id  =  $1`;
+  var queryString = `SELECT * FROM image WHERE id  =  $1`;
   DB.dbPostgres.query(queryString, [id], function(err, results) {
     if (err) {
       console.error('ERROR');
@@ -265,7 +265,7 @@ app.get('/books/:id/info/image', function(req, res) {
     console.log(results.rows);
     console.log(queryString);
     console.log(`total query time was ${Date.now() - time}ms`);
-    res.send(results.rows);
+    res.send(results.rows[0]);
   });
 });
 // ==============
@@ -290,7 +290,7 @@ app.get('/books/:id/info/ratings', function(req, res) {
 
   const time = Date.now();
 
-  var queryString = `SELECT bookInfo.id, users.bookInfo_id, users.id as user_id, num_ratings as rating  FROM bookInfo JOIN users ON users.id = bookInfo.id WHERE bookInfo.id = $1`;
+  var queryString = `SELECT * FROM ratings WHERE bookInfo_id = $1`;
   DB.dbPostgres.query(queryString, [id], function(err, results) {
     if (err) {
       console.error('ERROR');
@@ -327,7 +327,7 @@ app.get('/books/:id/info/reviews', function(req, res) {
 
   const time = Date.now();
 
-  var queryString = `SELECT id, id as bookInfo, description as review FROM bookInfo WHERE id = $1`;
+  var queryString = `SELECT * FROM reviews WHERE bookInfo_id = $1`;
   DB.dbPostgres.query(queryString, [id], function(err, results) {
     if (err) {
       console.error('ERROR');
@@ -367,25 +367,31 @@ app.get('/books/:id/info/reviews', function(req, res) {
 //   }
 // });
 
-// app.put('/books/:id/info/users/:userId/readStatus', function(req, res) {
-//   const id = req.params.id;
-//   console.log(req.params.id, 'id');
+app.put('/books/:id/info/users/:userId/readStatus', function(req, res) {
+  const id = parseInt(req.params.id);
+  console.log(id, 'id');
+  console.log(req.body, 'body');
 
-//   const time = Date.now();
+  const { bookInfo_id, user_id, status } = req.body;
 
-//   var queryString = `SELECT * FROM readStatus WHERE id = $1 AND bookInfo_id  =  $2`;
-//   DB.dbPostgres.query(queryString, [id, user_id], function(err, results) {
-//     if (err) {
-//       console.error('ERROR');
-//       throw err;
-//     }
-//     console.log(`SUCCESS : Retrieved records from  database : bookInfo `);
-//     console.log(results.rows);
-//     console.log(queryString);
-//     console.log(`total query time was ${Date.now() - time}ms`);
-//     res.send(results.rows);
-//   });
-// });
+  const time = Date.now();
+
+  var queryString = `UPDATE readStatus SET bookInfo_id = $2, user_id = $3, status = $4 WHERE id = $1`;
+  DB.dbPostgres.query(queryString, [req.params.id, bookInfo_id, user_id, status], function(
+    err,
+    results
+  ) {
+    if (err) {
+      console.error('ERROR');
+      throw err;
+    }
+    console.log(`SUCCESS : Retrieved records from  database : bookInfo `);
+    console.log(results.rows);
+    console.log(queryString);
+    console.log(`total query time was ${Date.now() - time}ms`);
+    res.send(results);
+  });
+});
 
 // ==============
 
@@ -415,10 +421,10 @@ app.get('/books/:id/info/users/:userId/readStatus', function(req, res) {
 
   const time = Date.now();
 
-  var queryString = `SELECT * FROM readStatus WHERE user_id = $1`;
+  var queryString = `SELECT * FROM readStatus WHERE user_id = $1 AND bookInfo_id = $2`;
 
   // var queryString = `SELECT * FROM bookInfo WHERE id  =  $1`;
-  DB.dbPostgres.query(queryString, [id], function(err, results) {
+  DB.dbPostgres.query(queryString, [id, userId], function(err, results) {
     if (err) {
       console.error('ERROR');
       throw err;
@@ -427,7 +433,7 @@ app.get('/books/:id/info/users/:userId/readStatus', function(req, res) {
     console.log(results.rows);
     console.log(queryString);
     console.log(`total query time was ${Date.now() - time}ms`);
-    res.send(results);
+    res.send(results.rows);
   });
 });
 
