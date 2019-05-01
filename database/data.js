@@ -10,13 +10,17 @@ const generateBookInfo = function BookInfo() {
   const bookInfo = {
     title: faker.random.words(2),
     author: faker.name.findName(),
-    description: faker.lorem.sentences(6),
-    num_reviews: faker.random.number({ min: 1, max: 50000 }),
-    num_ratings: faker.random.number({ min: 1, max: 2000000 }),
-    ratings_star: faker.random.number(0, 5, 2),
-    image: faker.image.image()
+    description: faker.lorem.sentences(6)
   };
   return bookInfo;
+};
+
+const generateImage = function Image() {
+  const image = {
+    bookInfo_id: faker.random.number({ min: 1, max: 1000000 }),
+    image: faker.image.image()
+  };
+  return image;
 };
 
 const generateUsers = function Users() {
@@ -27,10 +31,27 @@ const generateUsers = function Users() {
   return users;
 };
 
+const generateRatings = function Ratings() {
+  const ratings = {
+    bookInfo_id: faker.random.number({ min: 1, max: 1000000 }),
+    user_id: faker.random.number({ min: 1, max: 1000000 }),
+    rating: faker.random.number({ min: 1, max: 2000000 })
+  };
+  return ratings;
+};
+
+const generateReviews = function Reviews() {
+  const reviews = {
+    bookInfo_id: faker.random.number({ min: 1, max: 1000000 }),
+    review: faker.lorem.sentences(10)
+  };
+  return reviews;
+};
+
 const generateReadStatus = function ReadStatus() {
   const readStatus = {
     bookInfo_id: faker.random.number({ min: 1, max: 1000000 }),
-    user_id: faker.random.uuid(),
+    user_id: faker.random.number({ min: 1, max: 1000000 }),
     status: faker.random.number({ min: 0, max: 1 })
   };
   return readStatus;
@@ -75,10 +96,14 @@ console.time('timing seed');
 
 const filesToCreate = 5;
 
-dataWriteToDisk('readStatus', 0, generateReadStatus);
+dataWriteToDisk('bookInfo', 0, generateBookInfo);
+dataWriteToDisk('image', 0, generateImage);
 dataWriteToDisk('users', 0, generateUsers);
+dataWriteToDisk('ratings', 0, generateRatings);
+dataWriteToDisk('reviews', 0, generateReviews);
+dataWriteToDisk('readStatus', 0, generateReadStatus);
 
-for (let batch = 0; batch < filesToCreate; batch++) {
-  dataWriteToDisk('bookInfo', batch, generateBookInfo);
-}
+// for (let batch = 0; batch < filesToCreate; batch++) {
+//   dataWriteToDisk('bookInfo', batch, generateBookInfo);
+// }
 console.timeEnd('timing seed');
